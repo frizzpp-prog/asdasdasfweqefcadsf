@@ -1,0 +1,11 @@
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    "userId": 1,
+    "expiresIn": 3600,
+    "refreshToken": "refresh_abc123xyz",
+    "user": {
+        "id": 1,
+        "name": "Иван Иванов",
+        "email": "ivan@example.com"
+    }
+}
