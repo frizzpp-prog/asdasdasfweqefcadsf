@@ -72,6 +72,14 @@
             <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Selenium WebDriver для прокси -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.15.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

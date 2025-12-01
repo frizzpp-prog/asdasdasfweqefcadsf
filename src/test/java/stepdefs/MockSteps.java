@@ -225,4 +225,46 @@ public class MockSteps {
             .withStatus(status)
             .stub();
     }
+
+    // ==================== Проксирование ====================
+
+    /**
+     * Проксирует запросы на указанный URL.
+     * 
+     * Пример: Given API endpoint "/api/users" is proxied to "https://jsonplaceholder.typicode.com"
+     */
+    @Given("API endpoint {string} is proxied to {string}")
+    public void apiEndpointIsProxiedTo(String url, String proxyBaseUrl) {
+        log.info("Создание прокси: {} -> {}", url, proxyBaseUrl);
+        MockBuilder.get(url)
+            .proxiedFrom(proxyBaseUrl)
+            .stub();
+    }
+
+    /**
+     * Проксирует все запросы, соответствующие regex, на указанный URL.
+     * 
+     * Пример: Given all requests matching "/api/.*" are proxied to "https://api.example.com"
+     */
+    @Given("all requests matching {string} are proxied to {string}")
+    public void allRequestsMatchingAreProxiedTo(String urlPattern, String proxyBaseUrl) {
+        log.info("Создание прокси (regex): {} -> {}", urlPattern, proxyBaseUrl);
+        MockBuilder.getMatching(urlPattern)
+            .proxiedFrom(proxyBaseUrl)
+            .stub();
+    }
+    
+    /**
+     * Настраивает fallback прокси на целевой стенд.
+     * Все не перехваченные запросы будут проксироваться на указанный URL.
+     * 
+     * Пример: Given requests are proxied to "https://www.stend.ru"
+     */
+    @Given("requests are proxied to {string}")
+    public void requestsAreProxiedTo(String targetUrl) {
+        log.info("Настройка прокси fallback на: {}", targetUrl);
+        MockBuilder.getMatching("/.*")
+            .proxiedFrom(targetUrl)
+            .stub();
+    }
 }

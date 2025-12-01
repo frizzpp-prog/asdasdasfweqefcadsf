@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import com.github.tomakehurst.wiremock.client.WireMock;
 
 /**
  * Утилитарный класс для простого создания WireMock моков с использованием fluent API.
@@ -64,7 +65,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder get(String url) {
-        return new MockBuilder(get(urlEqualTo(url)));
+        return new MockBuilder(WireMock.get(WireMock.urlEqualTo(url)));
     }
     
     /**
@@ -74,7 +75,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder getMatching(String urlPattern) {
-        return new MockBuilder(get(urlMatching(urlPattern)));
+        return new MockBuilder(WireMock.get(WireMock.urlMatching(urlPattern)));
     }
     
     /**
@@ -84,7 +85,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder post(String url) {
-        return new MockBuilder(post(urlEqualTo(url)));
+        return new MockBuilder(WireMock.post(WireMock.urlEqualTo(url)));
     }
     
     /**
@@ -94,7 +95,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder postMatching(String urlPattern) {
-        return new MockBuilder(post(urlMatching(urlPattern)));
+        return new MockBuilder(WireMock.post(WireMock.urlMatching(urlPattern)));
     }
     
     /**
@@ -104,7 +105,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder put(String url) {
-        return new MockBuilder(put(urlEqualTo(url)));
+        return new MockBuilder(WireMock.put(WireMock.urlEqualTo(url)));
     }
     
     /**
@@ -114,7 +115,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder delete(String url) {
-        return new MockBuilder(delete(urlEqualTo(url)));
+        return new MockBuilder(WireMock.delete(WireMock.urlEqualTo(url)));
     }
     
     /**
@@ -124,7 +125,7 @@ public class MockBuilder {
      * @return builder для настройки мока
      */
     public static MockBuilder patch(String url) {
-        return new MockBuilder(patch(urlEqualTo(url)));
+        return new MockBuilder(WireMock.patch(WireMock.urlEqualTo(url)));
     }
     
     // ==================== Настройка ответа ====================
@@ -220,6 +221,17 @@ public class MockBuilder {
      */
     public MockBuilder withDelay(int delayMs) {
         this.responseBuilder.withFixedDelay(delayMs);
+        return this;
+    }
+
+    /**
+     * Настраивает проксирование запроса на другой базовый URL.
+     * 
+     * @param baseUrl базовый URL, куда перенаправлять запросы (например, "https://api.github.com")
+     * @return текущий builder
+     */
+    public MockBuilder proxiedFrom(String baseUrl) {
+        this.responseBuilder.proxiedFrom(baseUrl);
         return this;
     }
     

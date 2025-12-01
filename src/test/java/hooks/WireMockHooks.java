@@ -43,7 +43,15 @@ public class WireMockHooks {
     public void startWireMock(Scenario scenario) {
         log.info("Запуск WireMock для сценария: {}", scenario.getName());
         
-        String baseUrl = WireMockManager.startServer();
+        String baseUrl;
+        
+        // Если сценарий помечен тегом @proxy - запускаем в режиме прокси
+        if (scenario.getSourceTagNames().contains("@proxy")) {
+            baseUrl = WireMockManager.startServerWithProxy();
+            log.info("WireMock запущен в режиме HTTP прокси");
+        } else {
+            baseUrl = WireMockManager.startServer();
+        }
         
         log.info("WireMock сервер доступен по адресу: {}", baseUrl);
         log.debug("ID сценария: {}, Теги: {}", scenario.getId(), scenario.getSourceTagNames());

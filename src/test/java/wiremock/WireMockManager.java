@@ -65,6 +65,42 @@ public class WireMockManager {
     }
     
     /**
+     * Запускает WireMock сервер в режиме HTTP прокси.
+     * 
+     * В этом режиме WireMock может:
+     * - Перехватывать HTTP/HTTPS запросы от браузера
+     * - Подменять ответы для stubbed endpoints
+     * - Проксировать остальные запросы на реальные серверы
+     * 
+     * Используется для тестирования UI на удаленных стендах.
+     * 
+     * @return базовый URL запущенного WireMock сервера
+     */
+    public static String startServerWithProxy() {
+        stopServer();
+        
+        int port = findFreePort();
+        
+        WireMockServer server = new WireMockServer(
+            WireMockConfiguration.options()
+                .port(port)
+                .dynamicPort()
+                .enableBrowserProxying(true) // Включаем режим HTTP прокси
+        );
+        
+        server.start();
+        WIREMOCK_SERVER.set(server);
+        
+        WireMock.configureFor("localhost", server.port());
+        
+        String baseUrl = server.baseUrl();
+        log.info("WireMock сервер запущен в режиме прокси: {} (поток: {})", 
+                 baseUrl, Thread.currentThread().getName());
+        
+        return baseUrl;
+    }
+    
+    /**
      * Останавливает WireMock сервер в текущем потоке.
      * 
      * Если сервер не был запущен, метод ничего не делает.
@@ -123,6 +159,18 @@ public class WireMockManager {
     public static boolean isRunning() {
         WireMockServer server = getServer();
         return server != null && server.isRunning();
+    }
+    
+    /**
+     * Возвращает порт WireMock сервера для текущего потока.
+     * 
+     * Используется для настройки Selenium WebDriver на использование WireMock как прокси.
+     * 
+     * @return номер порта или 0, если сервер не запущен
+     */
+    public static int getPort() {
+        WireMockServer server = getServer();
+        return server != null ? server.port() : 0;
     }
     
     /**
